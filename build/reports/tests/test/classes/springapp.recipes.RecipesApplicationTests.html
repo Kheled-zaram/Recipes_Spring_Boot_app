@@ -23,7 +23,7 @@
 <tr>
 <td>
 <div class="infoBox" id="tests">
-<div class="counter">7</div>
+<div class="counter">11</div>
 <p>tests</p>
 </div>
 </td>
@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">1.355s</div>
+<div class="counter">2.042s</div>
 <p>duration</p>
 </div>
 </td>
@@ -78,38 +78,58 @@
 </tr>
 </thead>
 <tr>
-<td class="success">shouldCreateANewCashCard()</td>
-<td class="success">0.189s</td>
+<td class="success">shouldCreateANewRecipe()</td>
+<td class="success">1.264s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">shouldDeleteARecipe()</td>
+<td class="success">0.071s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">shouldNotDeleteARecipeWithAnUnknownId()</td>
+<td class="success">0.022s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">shouldNotReturnARecipeWithAnUnknownId()</td>
-<td class="success">0.019s</td>
+<td class="success">0.016s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">shouldNotUpdateARecipeWithAnUnknownId()</td>
+<td class="success">0.014s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">shouldReturnAPageOfRecipes()</td>
-<td class="success">0.981s</td>
+<td class="success">0.171s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">shouldReturnARecipeWhenDataIsSaved()</td>
-<td class="success">0.037s</td>
+<td class="success">0.023s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">shouldReturnASortedPageOfRecipes()</td>
-<td class="success">0.029s</td>
+<td class="success">0.022s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">shouldReturnASortedPageOfRecipesWithNoParametersAndUseDefaultValues()</td>
-<td class="success">0.028s</td>
+<td class="success">0.018s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">shouldReturnRecipesList()</td>
-<td class="success">0.072s</td>
+<td class="success">0.050s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">shouldUpdateARecipe()</td>
+<td class="success">0.371s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -117,8 +137,8 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>11:12:10.714 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [springapp.recipes.RecipesApplicationTests]: RecipesApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-11:12:10.845 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration springapp.recipes.RecipesApplication for test class springapp.recipes.RecipesApplicationTests
+<pre>19:44:21.592 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [springapp.recipes.RecipesApplicationTests]: RecipesApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+19:44:21.749 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration springapp.recipes.RecipesApplication for test class springapp.recipes.RecipesApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -129,24 +149,24 @@
 
  :: Spring Boot ::                (v3.4.1)
 
-2024-12-29T11:12:11.309+01:00  INFO 171501 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : Starting RecipesApplicationTests using Java 17.0.5 with PID 171501 (started by agnieszka in /home/agnieszka/IdeaProjects/Recipes-Spring-Boot-app)
-2024-12-29T11:12:11.311+01:00  INFO 171501 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : No active profile set, falling back to 1 default profile: &quot;default&quot;
-2024-12-29T11:12:11.975+01:00  INFO 171501 --- [Recipes] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2024-12-29T11:12:12.023+01:00  INFO 171501 --- [Recipes] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 38 ms. Found 1 JPA repository interface.
-2024-12-29T11:12:12.538+01:00  INFO 171501 --- [Recipes] [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
-2024-12-29T11:12:12.554+01:00  INFO 171501 --- [Recipes] [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2024-12-29T11:12:12.554+01:00  INFO 171501 --- [Recipes] [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.34]
-2024-12-29T11:12:12.633+01:00  INFO 171501 --- [Recipes] [    Test worker] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2024-12-29T11:12:12.635+01:00  INFO 171501 --- [Recipes] [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1300 ms
-2024-12-29T11:12:12.789+01:00  INFO 171501 --- [Recipes] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2024-12-29T11:12:12.872+01:00  INFO 171501 --- [Recipes] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.4.Final
-2024-12-29T11:12:12.922+01:00  INFO 171501 --- [Recipes] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2024-12-29T11:12:13.227+01:00  INFO 171501 --- [Recipes] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2024-12-29T11:12:13.259+01:00  INFO 171501 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2024-12-29T11:12:13.757+01:00  INFO 171501 --- [Recipes] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@50fa5938
-2024-12-29T11:12:13.759+01:00  INFO 171501 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2024-12-29T11:12:13.806+01:00  WARN 171501 --- [Recipes] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2024-12-29T11:12:13.825+01:00  INFO 171501 --- [Recipes] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2024-12-29T19:44:22.238+01:00  INFO 214666 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : Starting RecipesApplicationTests using Java 17.0.5 with PID 214666 (started by agnieszka in /home/agnieszka/IdeaProjects/Recipes-Spring-Boot-app)
+2024-12-29T19:44:22.239+01:00  INFO 214666 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2024-12-29T19:44:22.873+01:00  INFO 214666 --- [Recipes] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-29T19:44:22.920+01:00  INFO 214666 --- [Recipes] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 38 ms. Found 1 JPA repository interface.
+2024-12-29T19:44:23.533+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2024-12-29T19:44:23.548+01:00  INFO 214666 --- [Recipes] [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-12-29T19:44:23.549+01:00  INFO 214666 --- [Recipes] [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.34]
+2024-12-29T19:44:23.661+01:00  INFO 214666 --- [Recipes] [    Test worker] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-12-29T19:44:23.679+01:00  INFO 214666 --- [Recipes] [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1399 ms
+2024-12-29T19:44:24.066+01:00  INFO 214666 --- [Recipes] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-29T19:44:24.140+01:00  INFO 214666 --- [Recipes] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.4.Final
+2024-12-29T19:44:24.181+01:00  INFO 214666 --- [Recipes] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-29T19:44:24.510+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-29T19:44:24.551+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-29T19:44:25.156+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@c87787d
+2024-12-29T19:44:25.158+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-29T19:44:25.207+01:00  WARN 214666 --- [Recipes] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-29T19:44:25.224+01:00  INFO 214666 --- [Recipes] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
 	Database version: 15.10
@@ -154,20 +174,20 @@
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2024-12-29T11:12:14.714+01:00  INFO 171501 --- [Recipes] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2024-12-29T11:12:14.785+01:00  INFO 171501 --- [Recipes] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2024-12-29T11:12:14.993+01:00  WARN 171501 --- [Recipes] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2024-12-29T11:12:15.040+01:00  INFO 171501 --- [Recipes] [    Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
-2024-12-29T11:12:16.297+01:00  INFO 171501 --- [Recipes] [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 46103 (http) with context path '/'
-2024-12-29T11:12:16.307+01:00  INFO 171501 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : Started RecipesApplicationTests in 5.277 seconds (process running for 6.528)
-2024-12-29T11:12:16.951+01:00  INFO 171501 --- [Recipes] [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2024-12-29T11:12:16.951+01:00  INFO 171501 --- [Recipes] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2024-12-29T11:12:16.953+01:00  INFO 171501 --- [Recipes] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
-2024-12-29T11:12:17.485+01:00  INFO 171501 --- [Recipes] [    Test worker] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
-2024-12-29T11:12:17.489+01:00  INFO 171501 --- [Recipes] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
-2024-12-29T11:12:17.494+01:00  INFO 171501 --- [Recipes] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2024-12-29T11:12:17.500+01:00  INFO 171501 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2024-12-29T11:12:17.515+01:00  INFO 171501 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-29T19:44:26.049+01:00  INFO 214666 --- [Recipes] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-29T19:44:26.094+01:00  INFO 214666 --- [Recipes] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-29T19:44:26.325+01:00  WARN 214666 --- [Recipes] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-29T19:44:26.348+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2024-12-29T19:44:26.765+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 36719 (http) with context path '/'
+2024-12-29T19:44:26.773+01:00  INFO 214666 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : Started RecipesApplicationTests in 4.843 seconds (process running for 6.375)
+2024-12-29T19:44:27.517+01:00  INFO 214666 --- [Recipes] [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-29T19:44:27.517+01:00  INFO 214666 --- [Recipes] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-12-29T19:44:27.519+01:00  INFO 214666 --- [Recipes] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2024-12-29T19:44:27.963+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2024-12-29T19:44:27.968+01:00  INFO 214666 --- [Recipes] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2024-12-29T19:44:27.971+01:00  INFO 214666 --- [Recipes] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-29T19:44:27.980+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-12-29T19:44:27.992+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -178,23 +198,23 @@
 
  :: Spring Boot ::                (v3.4.1)
 
-2024-12-29T11:12:17.555+01:00  INFO 171501 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : Starting RecipesApplicationTests using Java 17.0.5 with PID 171501 (started by agnieszka in /home/agnieszka/IdeaProjects/Recipes-Spring-Boot-app)
-2024-12-29T11:12:17.556+01:00  INFO 171501 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : No active profile set, falling back to 1 default profile: &quot;default&quot;
-2024-12-29T11:12:17.718+01:00  INFO 171501 --- [Recipes] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2024-12-29T11:12:17.728+01:00  INFO 171501 --- [Recipes] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 6 ms. Found 1 JPA repository interface.
-2024-12-29T11:12:17.818+01:00  INFO 171501 --- [Recipes] [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
-2024-12-29T11:12:17.819+01:00  INFO 171501 --- [Recipes] [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2024-12-29T11:12:17.820+01:00  INFO 171501 --- [Recipes] [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.34]
-2024-12-29T11:12:17.835+01:00  INFO 171501 --- [Recipes] [    Test worker] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2024-12-29T11:12:17.835+01:00  INFO 171501 --- [Recipes] [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 276 ms
-2024-12-29T11:12:17.879+01:00  INFO 171501 --- [Recipes] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2024-12-29T11:12:17.882+01:00  INFO 171501 --- [Recipes] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2024-12-29T11:12:17.891+01:00  INFO 171501 --- [Recipes] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2024-12-29T11:12:17.892+01:00  INFO 171501 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
-2024-12-29T11:12:17.912+01:00  INFO 171501 --- [Recipes] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@7225f871
-2024-12-29T11:12:17.913+01:00  INFO 171501 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
-2024-12-29T11:12:17.916+01:00  WARN 171501 --- [Recipes] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2024-12-29T11:12:17.918+01:00  INFO 171501 --- [Recipes] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2024-12-29T19:44:28.078+01:00  INFO 214666 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : Starting RecipesApplicationTests using Java 17.0.5 with PID 214666 (started by agnieszka in /home/agnieszka/IdeaProjects/Recipes-Spring-Boot-app)
+2024-12-29T19:44:28.079+01:00  INFO 214666 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2024-12-29T19:44:28.270+01:00  INFO 214666 --- [Recipes] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-29T19:44:28.279+01:00  INFO 214666 --- [Recipes] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 4 ms. Found 1 JPA repository interface.
+2024-12-29T19:44:28.363+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2024-12-29T19:44:28.364+01:00  INFO 214666 --- [Recipes] [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-12-29T19:44:28.365+01:00  INFO 214666 --- [Recipes] [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.34]
+2024-12-29T19:44:28.419+01:00  INFO 214666 --- [Recipes] [    Test worker] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-12-29T19:44:28.419+01:00  INFO 214666 --- [Recipes] [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 338 ms
+2024-12-29T19:44:28.460+01:00  INFO 214666 --- [Recipes] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-29T19:44:28.464+01:00  INFO 214666 --- [Recipes] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-29T19:44:28.481+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-29T19:44:28.483+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2024-12-29T19:44:28.506+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@2c6c6b7b
+2024-12-29T19:44:28.507+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2024-12-29T19:44:28.512+01:00  WARN 214666 --- [Recipes] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-29T19:44:28.514+01:00  INFO 214666 --- [Recipes] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
 	Database driver: undefined/unknown
 	Database version: 15.10
@@ -202,16 +222,112 @@
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2024-12-29T11:12:17.958+01:00  INFO 171501 --- [Recipes] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2024-12-29T11:12:17.979+01:00  INFO 171501 --- [Recipes] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2024-12-29T11:12:18.011+01:00  WARN 171501 --- [Recipes] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2024-12-29T11:12:18.019+01:00  INFO 171501 --- [Recipes] [    Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
-2024-12-29T11:12:18.132+01:00  INFO 171501 --- [Recipes] [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 43431 (http) with context path '/'
-2024-12-29T11:12:18.136+01:00  INFO 171501 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : Started RecipesApplicationTests in 0.607 seconds (process running for 8.357)
-2024-12-29T11:12:18.155+01:00  INFO 171501 --- [Recipes] [o-auto-2-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2024-12-29T11:12:18.156+01:00  INFO 171501 --- [Recipes] [o-auto-2-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2024-12-29T11:12:18.158+01:00  INFO 171501 --- [Recipes] [o-auto-2-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
-com.jayway.jsonpath.internal.JsonContext@77d80294
+2024-12-29T19:44:28.567+01:00  INFO 214666 --- [Recipes] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-29T19:44:28.586+01:00  INFO 214666 --- [Recipes] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-29T19:44:28.634+01:00  WARN 214666 --- [Recipes] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-29T19:44:28.640+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2024-12-29T19:44:28.744+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 36231 (http) with context path '/'
+2024-12-29T19:44:28.749+01:00  INFO 214666 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : Started RecipesApplicationTests in 0.703 seconds (process running for 8.351)
+2024-12-29T19:44:28.764+01:00  INFO 214666 --- [Recipes] [o-auto-2-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-29T19:44:28.765+01:00  INFO 214666 --- [Recipes] [o-auto-2-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-12-29T19:44:28.767+01:00  INFO 214666 --- [Recipes] [o-auto-2-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2024-12-29T19:44:29.275+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2024-12-29T19:44:29.276+01:00  INFO 214666 --- [Recipes] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2024-12-29T19:44:29.279+01:00  INFO 214666 --- [Recipes] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-29T19:44:29.284+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
+2024-12-29T19:44:29.292+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.1)
+
+2024-12-29T19:44:29.319+01:00  INFO 214666 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : Starting RecipesApplicationTests using Java 17.0.5 with PID 214666 (started by agnieszka in /home/agnieszka/IdeaProjects/Recipes-Spring-Boot-app)
+2024-12-29T19:44:29.320+01:00  INFO 214666 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2024-12-29T19:44:29.415+01:00  INFO 214666 --- [Recipes] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-29T19:44:29.420+01:00  INFO 214666 --- [Recipes] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 3 ms. Found 1 JPA repository interface.
+2024-12-29T19:44:29.475+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2024-12-29T19:44:29.475+01:00  INFO 214666 --- [Recipes] [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-12-29T19:44:29.476+01:00  INFO 214666 --- [Recipes] [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.34]
+2024-12-29T19:44:29.494+01:00  INFO 214666 --- [Recipes] [    Test worker] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-12-29T19:44:29.494+01:00  INFO 214666 --- [Recipes] [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 173 ms
+2024-12-29T19:44:29.528+01:00  INFO 214666 --- [Recipes] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-29T19:44:29.530+01:00  INFO 214666 --- [Recipes] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-29T19:44:29.537+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-29T19:44:29.538+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2024-12-29T19:44:29.561+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection org.postgresql.jdbc.PgConnection@4c255e8
+2024-12-29T19:44:29.561+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2024-12-29T19:44:29.564+01:00  WARN 214666 --- [Recipes] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-29T19:44:29.566+01:00  INFO 214666 --- [Recipes] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 15.10
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-29T19:44:29.607+01:00  INFO 214666 --- [Recipes] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-29T19:44:29.626+01:00  INFO 214666 --- [Recipes] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-29T19:44:29.660+01:00  WARN 214666 --- [Recipes] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-29T19:44:29.668+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2024-12-29T19:44:29.752+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 45555 (http) with context path '/'
+2024-12-29T19:44:29.755+01:00  INFO 214666 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : Started RecipesApplicationTests in 0.457 seconds (process running for 9.357)
+2024-12-29T19:44:29.764+01:00  INFO 214666 --- [Recipes] [o-auto-3-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-29T19:44:29.764+01:00  INFO 214666 --- [Recipes] [o-auto-3-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-12-29T19:44:29.765+01:00  INFO 214666 --- [Recipes] [o-auto-3-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+com.jayway.jsonpath.internal.JsonContext@66f62b8c
+2024-12-29T19:44:29.914+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2024-12-29T19:44:29.915+01:00  INFO 214666 --- [Recipes] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2024-12-29T19:44:29.918+01:00  INFO 214666 --- [Recipes] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-29T19:44:29.923+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown initiated...
+2024-12-29T19:44:29.946+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.1)
+
+2024-12-29T19:44:29.972+01:00  INFO 214666 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : Starting RecipesApplicationTests using Java 17.0.5 with PID 214666 (started by agnieszka in /home/agnieszka/IdeaProjects/Recipes-Spring-Boot-app)
+2024-12-29T19:44:29.973+01:00  INFO 214666 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2024-12-29T19:44:30.077+01:00  INFO 214666 --- [Recipes] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-29T19:44:30.082+01:00  INFO 214666 --- [Recipes] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 3 ms. Found 1 JPA repository interface.
+2024-12-29T19:44:30.167+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2024-12-29T19:44:30.169+01:00  INFO 214666 --- [Recipes] [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-12-29T19:44:30.169+01:00  INFO 214666 --- [Recipes] [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.34]
+2024-12-29T19:44:30.189+01:00  INFO 214666 --- [Recipes] [    Test worker] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-12-29T19:44:30.190+01:00  INFO 214666 --- [Recipes] [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 215 ms
+2024-12-29T19:44:30.224+01:00  INFO 214666 --- [Recipes] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-29T19:44:30.226+01:00  INFO 214666 --- [Recipes] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-12-29T19:44:30.234+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-29T19:44:30.235+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Starting...
+2024-12-29T19:44:30.255+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-4 - Added connection org.postgresql.jdbc.PgConnection@119b837
+2024-12-29T19:44:30.255+01:00  INFO 214666 --- [Recipes] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Start completed.
+2024-12-29T19:44:30.258+01:00  WARN 214666 --- [Recipes] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-29T19:44:30.259+01:00  INFO 214666 --- [Recipes] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-4)']
+	Database driver: undefined/unknown
+	Database version: 15.10
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2024-12-29T19:44:30.295+01:00  INFO 214666 --- [Recipes] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-29T19:44:30.315+01:00  INFO 214666 --- [Recipes] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-29T19:44:30.345+01:00  WARN 214666 --- [Recipes] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-29T19:44:30.350+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2024-12-29T19:44:30.424+01:00  INFO 214666 --- [Recipes] [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 36205 (http) with context path '/'
+2024-12-29T19:44:30.426+01:00  INFO 214666 --- [Recipes] [    Test worker] s.recipes.RecipesApplicationTests        : Started RecipesApplicationTests in 0.475 seconds (process running for 10.029)
+2024-12-29T19:44:30.435+01:00  INFO 214666 --- [Recipes] [o-auto-4-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-29T19:44:30.435+01:00  INFO 214666 --- [Recipes] [o-auto-4-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-12-29T19:44:30.436+01:00  INFO 214666 --- [Recipes] [o-auto-4-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
 </pre>
 </span>
 </div>
@@ -223,7 +339,7 @@ com.jayway.jsonpath.internal.JsonContext@77d80294
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.11.1</a> at 29 Dec 2024, 11:12:18</p>
+<a href="http://www.gradle.org">Gradle 8.11.1</a> at 29 Dec 2024, 19:44:31</p>
 </div>
 </div>
 </body>

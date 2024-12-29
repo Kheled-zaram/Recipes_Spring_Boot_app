@@ -44,14 +44,32 @@ public class RecipesController {
     @GetMapping("/recipe/{id}")
     public ResponseEntity<Recipe> findRecipe(@PathVariable Long id) {
         Optional<Recipe> recipe = recipeRepository.findById(id);
-//        return recipe.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-        if (recipe.isPresent()) {
+
+        if (recipe.isPresent())
             return ResponseEntity.ok(recipe.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+
+        return ResponseEntity.notFound().build();
     }
 
+    @DeleteMapping("/recipe/{id}")
+    public ResponseEntity<Void> deleteRecipe(@PathVariable Long id) {
+        Optional<Recipe> recipe = recipeRepository.findById(id);
+
+        if (!recipe.isPresent())
+            return ResponseEntity.notFound().build();
+
+        recipeRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("recipe/{id}")
+    public ResponseEntity<Recipe> updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe) {
+        if (!recipeRepository.existsById(id))
+            return ResponseEntity.notFound().build();
+
+        recipeRepository.save(recipe);
+        return ResponseEntity.ok(recipe);
+    }
 
 }
 

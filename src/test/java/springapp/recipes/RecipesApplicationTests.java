@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -114,7 +116,7 @@ class RecipesApplicationTests {
 
     @Test
     @DirtiesContext
-    void shouldCreateANewCashCard() {
+    void shouldCreateANewRecipe() {
 
         Recipe newRecipe = new Recipe();
         newRecipe.setTitle("title");
@@ -143,5 +145,74 @@ class RecipesApplicationTests {
         assertThat(url).isEqualTo("url");
         assertThat(description).isEqualTo("description");
         assertThat(isSweet).isFalse();
+    }
+
+    @Test
+    @DirtiesContext
+    void shouldDeleteARecipe() {
+        ResponseEntity<Void> response = restTemplate.exchange("/recipe/999", HttpMethod.DELETE, null, Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<Recipe> getResponse = restTemplate.getForEntity("/recipe/999", Recipe.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void shouldNotDeleteARecipeWithAnUnknownId() {
+        ResponseEntity<Void> response = restTemplate.exchange("/recipe/9990", HttpMethod.DELETE, null, Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+        ResponseEntity<Recipe> getResponse = restTemplate.getForEntity("/recipe/9990", Recipe.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    @DirtiesContext
+    void shouldUpdateARecipe() {
+        Recipe newRecipe = new Recipe();
+        newRecipe.setTitle("new title");
+        newRecipe.setUrl(null);
+        newRecipe.setDescription("new description");
+        newRecipe.setSweet(false);
+        newRecipe.setId(999L);
+
+        ResponseEntity<String> response = restTemplate.exchange("/recipe/999", HttpMethod.PUT, new HttpEntity<>(newRecipe), String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        compareRecipeObjectToResponse(response, newRecipe);
+
+        response = restTemplate.getForEntity("/recipe/999", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        compareRecipeObjectToResponse(response, newRecipe);
+    }
+
+    @Test
+    void shouldNotUpdateARecipeWithAnUnknownId() {
+        Recipe newRecipe = new Recipe();
+        newRecipe.setId(9990L);
+
+        ResponseEntity<String> response = restTemplate.exchange("/recipe/9990", HttpMethod.PUT, new HttpEntity<>(newRecipe), String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    private void compareRecipeObjectToResponse(ResponseEntity<String> response, Recipe recipe) {
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+
+        if (recipe.getId() != null) {
+            Number id = documentContext.read("$.id");
+            assertThat(id.longValue()).isEqualTo(recipe.getId());
+        }
+
+        String title = documentContext.read("$.title");
+        assertThat(title).isEqualTo(recipe.getTitle());
+
+        String description = documentContext.read("$.description");
+        assertThat(description).isEqualTo(recipe.getDescription());
+
+        String url = documentContext.read("$.url");
+        assertThat(url).isEqualTo(recipe.getUrl());
+
+        boolean isSweet = documentContext.read("$.isSweet");
+        assertThat(isSweet).isEqualTo(recipe.isSweet());
     }
 }
