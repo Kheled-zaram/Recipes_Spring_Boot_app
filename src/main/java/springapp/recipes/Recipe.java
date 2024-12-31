@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.JdbcTypeCode;
 
+import java.util.Date;
 import java.sql.Types;
 
 @Entity
@@ -29,6 +30,10 @@ public class Recipe {
 
     @Column(nullable = false)
     private String owner;
+
+    @Column(name = "last_update", nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Date lastUpdate = new Date();
 
 //    @ManyToOne
 //    @JoinColumn(name = "owner_id")
@@ -89,5 +94,13 @@ public class Recipe {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 }

@@ -90,7 +90,7 @@ class RecipesApplicationTests {
         assertThat(page.size()).isEqualTo(3);
 
         JSONArray titles = documentContext.read("$..title");
-        assertThat(titles).containsExactly("Lukier cytrynowy", "Makownik", "Paszteciki ze szpinakiem");
+        assertThat(titles).containsExactly("Paszteciki ze szpinakiem", "Lukier cytrynowy", "Makownik");
     }
 
     @Test

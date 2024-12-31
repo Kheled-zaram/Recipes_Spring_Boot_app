@@ -10,7 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.security.Principal;
-import java.util.Optional;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/recipes")
@@ -29,7 +29,7 @@ public class RecipesController {
                 PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize(),
-                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "title"))
+                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "lastUpdate"))
                 ));
         return ResponseEntity.ok(page.getContent());
     }
@@ -37,6 +37,8 @@ public class RecipesController {
     @PostMapping
     public ResponseEntity<Void> saveRecipe(@RequestBody Recipe recipe, UriComponentsBuilder ucb, Principal principal) {
         recipe.setOwner(principal.getName());
+        recipe.setLastUpdate(new Date());
+
         Recipe savedRecipe = recipeRepository.save(recipe);
         URI locationOfNewCashCard = ucb
                 .path("recipes/{id}")
@@ -68,6 +70,7 @@ public class RecipesController {
     @PutMapping("/{id}")
     public ResponseEntity<Recipe> updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe, Principal principal) {
         recipe.setOwner(principal.getName());
+        recipe.setLastUpdate(new Date());
 
         if (!recipeRepository.existsByIdAndOwner(id, principal.getName()))
             return ResponseEntity.notFound().build();
