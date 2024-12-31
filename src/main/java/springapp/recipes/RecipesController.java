@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/recipes")
 public class RecipesController {
 
     private final RecipeRepository recipeRepository;
@@ -20,9 +22,10 @@ public class RecipesController {
         this.recipeRepository = recipeRepository;
     }
 
-    @GetMapping("/recipes")
-    public ResponseEntity<Iterable<Recipe>> findAllRecipes(Pageable pageable) {
-        Page<Recipe> page = recipeRepository.findAll(
+    @GetMapping
+    public ResponseEntity<Iterable<Recipe>> findAllRecipes(Pageable pageable, Principal principal) {
+        Page<Recipe> page = recipeRepository.findByOwner(
+                principal.getName(),
                 PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize(),
@@ -31,40 +34,42 @@ public class RecipesController {
         return ResponseEntity.ok(page.getContent());
     }
 
-    @PostMapping("/recipe")
-    public ResponseEntity<Void> saveRecipe(@RequestBody Recipe recipe, UriComponentsBuilder ucb) {
+    @PostMapping
+    public ResponseEntity<Void> saveRecipe(@RequestBody Recipe recipe, UriComponentsBuilder ucb, Principal principal) {
+        recipe.setOwner(principal.getName());
         Recipe savedRecipe = recipeRepository.save(recipe);
         URI locationOfNewCashCard = ucb
-                .path("recipe/{id}")
+                .path("recipes/{id}")
                 .buildAndExpand(savedRecipe.getId())
                 .toUri();
         return ResponseEntity.created(locationOfNewCashCard).build();
     }
 
-    @GetMapping("/recipe/{id}")
-    public ResponseEntity<Recipe> findRecipe(@PathVariable Long id) {
-        Optional<Recipe> recipe = recipeRepository.findById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Recipe> findRecipe(@PathVariable Long id, Principal principal) {
+        Recipe recipe = recipeRepository.findByIdAndOwner(id, principal.getName());
 
-        if (recipe.isPresent())
-            return ResponseEntity.ok(recipe.get());
+        if (recipe != null)
+            return ResponseEntity.ok(recipe);
 
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/recipe/{id}")
-    public ResponseEntity<Void> deleteRecipe(@PathVariable Long id) {
-        Optional<Recipe> recipe = recipeRepository.findById(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRecipe(@PathVariable Long id, Principal principal) {
 
-        if (!recipe.isPresent())
+        if (!recipeRepository.existsByIdAndOwner(id, principal.getName()))
             return ResponseEntity.notFound().build();
 
         recipeRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("recipe/{id}")
-    public ResponseEntity<Recipe> updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe) {
-        if (!recipeRepository.existsById(id))
+    @PutMapping("/{id}")
+    public ResponseEntity<Recipe> updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe, Principal principal) {
+        recipe.setOwner(principal.getName());
+
+        if (!recipeRepository.existsByIdAndOwner(id, principal.getName()))
             return ResponseEntity.notFound().build();
 
         recipeRepository.save(recipe);

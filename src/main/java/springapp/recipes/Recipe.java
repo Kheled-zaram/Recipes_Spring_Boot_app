@@ -3,6 +3,9 @@ package springapp.recipes;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.JdbcTypeCode;
+
+import java.sql.Types;
 
 @Entity
 @Table(name = "recipes")
@@ -16,13 +19,28 @@ public class Recipe {
     @Size(max=256)
     private String title;
 
-    @Lob
+    @JdbcTypeCode(Types.LONGVARCHAR)
     private String description;
 
     private String url;
 
     @Column(name = "is_sweet")
     private boolean isSweet;
+
+    @Column(nullable = false)
+    private String owner;
+
+//    @ManyToOne
+//    @JoinColumn(name = "owner_id")
+//    private User owner;
+//
+//    public User getOwner() {
+//        return owner;
+//    }
+//
+//    public void setOwner(User owner) {
+//        this.owner = owner;
+//    }
 
     public void setId(Long id) {
         this.id = id;
@@ -63,5 +81,13 @@ public class Recipe {
 
     public void setSweet(boolean sweet) {
         isSweet = sweet;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

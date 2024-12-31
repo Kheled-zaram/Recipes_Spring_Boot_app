@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,12 +26,15 @@ class RecipesApplicationTests {
     @Autowired
     TestRestTemplate restTemplate;
 
-    @Test void shouldReturnRecipesList() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/recipes", String.class);
+    @Test
+    void shouldReturnRecipesList() {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .getForEntity("/recipes", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         DocumentContext documentContext = JsonPath.parse(response.getBody());
-        System.out.println(documentContext);
+
         int recipeCount = documentContext.read("$.length()");
         assertThat(recipeCount).isEqualTo(3);
 
@@ -39,17 +45,18 @@ class RecipesApplicationTests {
         assertThat(titles).containsExactlyInAnyOrder("Makownik", "Paszteciki ze szpinakiem", "Lukier cytrynowy");
 
         JSONArray urls = documentContext.read("$..url");
-        assertThat(urls).containsExactlyInAnyOrder("https://kuchnia-domowa-ani.blogspot.com/2018/12/paszteciki-ze-szpinakiem-i-serem.html", "https://ilovebake.pl/przepis/makowiec-na-kruchym-spodzie", null);
+        assertThat(urls)
+                .containsExactlyInAnyOrder("https://kuchnia-domowa-ani.blogspot.com/2018/12/paszteciki-ze-szpinakiem-i-serem.html",
+                        "https://ilovebake.pl/przepis/makowiec-na-kruchym-spodzie", null);
 
         JSONArray areSweet = documentContext.read("$..isSweet");
         assertThat(areSweet).containsExactlyInAnyOrder(true, true, false);
 
-        // TODO: how to test description?
     }
 
     @Test
     void shouldReturnAPageOfRecipes() {
-        ResponseEntity<String> response = restTemplate
+        ResponseEntity<String> response = restTemplate.withBasicAuth("Peppa_Pig", "Peppa_pwd")
                 .getForEntity("/recipes?page=0&size=1", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -60,7 +67,7 @@ class RecipesApplicationTests {
 
     @Test
     void shouldReturnASortedPageOfRecipes() {
-        ResponseEntity<String> response = restTemplate
+        ResponseEntity<String> response = restTemplate.withBasicAuth("Peppa_Pig", "Peppa_pwd")
                 .getForEntity("/recipes?page=0&size=1&sort=title,desc", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -74,7 +81,7 @@ class RecipesApplicationTests {
 
     @Test
     void shouldReturnASortedPageOfRecipesWithNoParametersAndUseDefaultValues() {
-        ResponseEntity<String> response = restTemplate
+        ResponseEntity<String> response = restTemplate.withBasicAuth("Peppa_Pig", "Peppa_pwd")
                 .getForEntity("/recipes", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -88,8 +95,8 @@ class RecipesApplicationTests {
 
     @Test
     void shouldReturnARecipeWhenDataIsSaved() {
-        ResponseEntity<String> response = restTemplate
-                .getForEntity("/recipe/999", String.class);
+        ResponseEntity<String> response = restTemplate.withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .getForEntity("/recipes/999", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
@@ -108,8 +115,16 @@ class RecipesApplicationTests {
 
     @Test
     void shouldNotReturnARecipeWithAnUnknownId() {
-        ResponseEntity<String> response = restTemplate
-                .getForEntity("/recipe/5000", String.class);
+        ResponseEntity<String> response = restTemplate.withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .getForEntity("/recipes/5000", String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void shouldNotReturnARecipeOwnedByAnotherUser() {
+        ResponseEntity<String> response = restTemplate.withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .getForEntity("/recipes/1002", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
@@ -117,7 +132,6 @@ class RecipesApplicationTests {
     @Test
     @DirtiesContext
     void shouldCreateANewRecipe() {
-
         Recipe newRecipe = new Recipe();
         newRecipe.setTitle("title");
         newRecipe.setUrl("url");
@@ -125,44 +139,82 @@ class RecipesApplicationTests {
         newRecipe.setSweet(false);
 
         ResponseEntity<Void> createResponse = restTemplate
-                .postForEntity("/recipe", newRecipe, Void.class);
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .postForEntity("/recipes", newRecipe, Void.class);
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         URI locationOfNewRecipe = createResponse.getHeaders().getLocation();
         ResponseEntity<String> getResponse = restTemplate
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
                 .getForEntity(locationOfNewRecipe, String.class);
+
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
-        Number id = documentContext.read("$.id");
-        String title = documentContext.read("$.title");
-        String url = documentContext.read("$.url");
-        String description = documentContext.read("$.description");
-        boolean isSweet = documentContext.read("$.isSweet");
+        compareRecipeObjectToResponse(getResponse, newRecipe);
+    }
 
-        assertThat(id).isNotNull();
-        assertThat(title).isEqualTo("title");
-        assertThat(url).isEqualTo("url");
-        assertThat(description).isEqualTo("description");
-        assertThat(isSweet).isFalse();
+    @Test
+    @DirtiesContext
+    void shouldCreateANewRecipeWithVeryLongDescription() throws IOException {
+        Recipe newRecipe = new Recipe();
+        newRecipe.setTitle("Peppermint Mocha Cake");
+        newRecipe.setUrl("https://www.mycakeschool.com/peppermint-mocha-cake/");
+        newRecipe.setSweet(true);
+
+        BufferedReader br = new BufferedReader(new FileReader("src/test/resources/springapp/recipes/very_long_description.txt"));
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+            }
+            newRecipe.setDescription(sb.toString());
+        } finally {
+            br.close();
+        }
+
+        ResponseEntity<Void> createResponse = restTemplate
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .postForEntity("/recipes", newRecipe, Void.class);
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        URI locationOfNewRecipe = createResponse.getHeaders().getLocation();
+        ResponseEntity<String> getResponse = restTemplate
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .getForEntity(locationOfNewRecipe, String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        compareRecipeObjectToResponse(getResponse, newRecipe);
     }
 
     @Test
     @DirtiesContext
     void shouldDeleteARecipe() {
-        ResponseEntity<Void> response = restTemplate.exchange("/recipe/999", HttpMethod.DELETE, null, Void.class);
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .exchange("/recipes/999", HttpMethod.DELETE, null, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        ResponseEntity<Recipe> getResponse = restTemplate.getForEntity("/recipe/999", Recipe.class);
+        ResponseEntity<Recipe> getResponse = restTemplate
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .getForEntity("/recipes/999", Recipe.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     void shouldNotDeleteARecipeWithAnUnknownId() {
-        ResponseEntity<Void> response = restTemplate.exchange("/recipe/9990", HttpMethod.DELETE, null, Void.class);
+        ResponseEntity<Void> response = restTemplate
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .exchange("/recipes/9990", HttpMethod.DELETE, null, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
-        ResponseEntity<Recipe> getResponse = restTemplate.getForEntity("/recipe/9990", Recipe.class);
+        ResponseEntity<Recipe> getResponse = restTemplate
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .getForEntity("/recipes/9990", Recipe.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
@@ -176,12 +228,16 @@ class RecipesApplicationTests {
         newRecipe.setSweet(false);
         newRecipe.setId(999L);
 
-        ResponseEntity<String> response = restTemplate.exchange("/recipe/999", HttpMethod.PUT, new HttpEntity<>(newRecipe), String.class);
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .exchange("/recipes/999", HttpMethod.PUT, new HttpEntity<>(newRecipe), String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         compareRecipeObjectToResponse(response, newRecipe);
 
-        response = restTemplate.getForEntity("/recipe/999", String.class);
+        response = restTemplate
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .getForEntity("/recipes/999", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         compareRecipeObjectToResponse(response, newRecipe);
     }
@@ -191,17 +247,31 @@ class RecipesApplicationTests {
         Recipe newRecipe = new Recipe();
         newRecipe.setId(9990L);
 
-        ResponseEntity<String> response = restTemplate.exchange("/recipe/9990", HttpMethod.PUT, new HttpEntity<>(newRecipe), String.class);
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .exchange("/recipes/9990", HttpMethod.PUT, new HttpEntity<>(newRecipe), String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void shouldNotUpdateARecipeOwnedByAnotherUser() {
+        Recipe newRecipe = new Recipe();
+        newRecipe.setId(9990L);
+
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .exchange("/recipes/1002", HttpMethod.PUT, new HttpEntity<>(newRecipe), String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     private void compareRecipeObjectToResponse(ResponseEntity<String> response, Recipe recipe) {
         DocumentContext documentContext = JsonPath.parse(response.getBody());
 
-        if (recipe.getId() != null) {
-            Number id = documentContext.read("$.id");
+        Number id = documentContext.read("$.id");
+        if (recipe.getId() != null)
             assertThat(id.longValue()).isEqualTo(recipe.getId());
-        }
+        else
+            assertThat(id).isNotNull();
 
         String title = documentContext.read("$.title");
         assertThat(title).isEqualTo(recipe.getTitle());
@@ -215,4 +285,5 @@ class RecipesApplicationTests {
         boolean isSweet = documentContext.read("$.isSweet");
         assertThat(isSweet).isEqualTo(recipe.isSweet());
     }
+
 }
