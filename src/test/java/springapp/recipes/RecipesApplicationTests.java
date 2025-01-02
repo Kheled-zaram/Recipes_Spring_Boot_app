@@ -12,11 +12,17 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
+import springapp.recipes.model.Category;
+import springapp.recipes.model.Label;
+import springapp.recipes.model.Recipe;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,7 +44,7 @@ class RecipesApplicationTests {
         int recipeCount = documentContext.read("$.length()");
         assertThat(recipeCount).isEqualTo(3);
 
-        JSONArray ids = documentContext.read("$..id");
+        JSONArray ids = documentContext.read("$.*.id");
         assertThat(ids).containsExactlyInAnyOrder(999, 1000, 1001);
 
         JSONArray titles = documentContext.read("$..title");
@@ -52,6 +58,8 @@ class RecipesApplicationTests {
         JSONArray areSweet = documentContext.read("$..isSweet");
         assertThat(areSweet).containsExactlyInAnyOrder(true, true, false);
 
+        JSONArray category_ids = documentContext.read("$.*.category.id");
+        assertThat(category_ids).containsExactlyInAnyOrder(11, 12, 13);
     }
 
     @Test
@@ -99,18 +107,9 @@ class RecipesApplicationTests {
                 .getForEntity("/recipes/999", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        DocumentContext documentContext = JsonPath.parse(response.getBody());
-        Number id = documentContext.read("$.id");
-        assertThat(id).isEqualTo(999);
+        Recipe expected = getSavedRecipe();
 
-        String title = documentContext.read("$.title");
-        assertThat(title).isEqualTo("Makownik");
-
-        String url = documentContext.read("$.url");
-        assertThat(url).isEqualTo("https://ilovebake.pl/przepis/makowiec-na-kruchym-spodzie");
-
-        boolean isSweet = documentContext.read("$.isSweet");
-        assertThat(isSweet).isTrue();
+        compareRecipeObjectToResponse(response, expected);
     }
 
     @Test
@@ -132,11 +131,13 @@ class RecipesApplicationTests {
     @Test
     @DirtiesContext
     void shouldCreateANewRecipe() {
-        Recipe newRecipe = new Recipe();
+        Recipe newRecipe = getSavedRecipe();
+
         newRecipe.setTitle("title");
         newRecipe.setUrl("url");
         newRecipe.setDescription("description");
         newRecipe.setSweet(false);
+        newRecipe.setId(null);
 
         ResponseEntity<Void> createResponse = restTemplate
                 .withBasicAuth("Peppa_Pig", "Peppa_pwd")
@@ -151,15 +152,54 @@ class RecipesApplicationTests {
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         compareRecipeObjectToResponse(getResponse, newRecipe);
+
+        compareLabelsWithResponse(locationOfNewRecipe.getPath(), getSavedLabels());
+    }
+
+    @Test
+    @DirtiesContext
+    void shouldCreateANewRecipeAndANewCategoryAndANewLabel() {
+        Recipe newRecipe = getSavedRecipe();
+
+        newRecipe.setTitle("title");
+        newRecipe.setUrl("url");
+        newRecipe.setDescription("description");
+        newRecipe.setSweet(false);
+        newRecipe.setId(null);
+
+        Category newCategory = new Category();
+        newCategory.setName("category_name");
+        newRecipe.setCategory(newCategory);
+
+        Label newLabel = new Label();
+        newLabel.setName("New label");
+
+        Set<Label> labels = new HashSet<>(getSavedLabels());
+        labels.add(newLabel);
+        newRecipe.setLabels(labels);
+
+        ResponseEntity<Void> createResponse = restTemplate
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .postForEntity("/recipes", newRecipe, Void.class);
+        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        URI locationOfNewRecipe = createResponse.getHeaders().getLocation();
+        ResponseEntity<String> getResponse = restTemplate
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .getForEntity(locationOfNewRecipe, String.class);
+
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        compareRecipeObjectToResponse(getResponse, newRecipe);
+
+        compareLabelsWithResponse(locationOfNewRecipe.getPath(), labels);
     }
 
     @Test
     @DirtiesContext
     void shouldCreateANewRecipeWithVeryLongDescription() throws IOException {
-        Recipe newRecipe = new Recipe();
-        newRecipe.setTitle("Peppermint Mocha Cake");
-        newRecipe.setUrl("https://www.mycakeschool.com/peppermint-mocha-cake/");
-        newRecipe.setSweet(true);
+        Recipe newRecipe = getSavedRecipe();
+        newRecipe.setId(null);
 
         BufferedReader br = new BufferedReader(new FileReader("src/test/resources/springapp/recipes/very_long_description.txt"));
         try {
@@ -221,12 +261,24 @@ class RecipesApplicationTests {
     @Test
     @DirtiesContext
     void shouldUpdateARecipe() {
-        Recipe newRecipe = new Recipe();
+        Recipe newRecipe = getSavedRecipe();
         newRecipe.setTitle("new title");
         newRecipe.setUrl(null);
         newRecipe.setDescription("new description");
         newRecipe.setSweet(false);
-        newRecipe.setId(999L);
+
+        Category newCategory = new Category();
+        newCategory.setId(13);
+        newCategory.setName("Drożdżówki");
+        newRecipe.setCategory(newCategory);
+
+        Label label0 = new Label();
+        label0.setName("New label");
+
+        Label label1 = new Label();
+        label1.setId(11);
+        label1.setName("Mak");
+        newRecipe.setLabels(Set.of(label0, label1));
 
         ResponseEntity<String> response = restTemplate
                 .withBasicAuth("Peppa_Pig", "Peppa_pwd")
@@ -239,12 +291,15 @@ class RecipesApplicationTests {
                 .withBasicAuth("Peppa_Pig", "Peppa_pwd")
                 .getForEntity("/recipes/999", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
         compareRecipeObjectToResponse(response, newRecipe);
+
+        compareLabelsWithResponse("/recipes/999", Set.of(label0, label1));
     }
 
     @Test
     void shouldNotUpdateARecipeWithAnUnknownId() {
-        Recipe newRecipe = new Recipe();
+        Recipe newRecipe = getSavedRecipe();
         newRecipe.setId(9990L);
 
         ResponseEntity<String> response = restTemplate
@@ -255,12 +310,25 @@ class RecipesApplicationTests {
 
     @Test
     void shouldNotUpdateARecipeOwnedByAnotherUser() {
-        Recipe newRecipe = new Recipe();
+        Recipe newRecipe = getSavedRecipe();
         newRecipe.setId(9990L);
 
         ResponseEntity<String> response = restTemplate
                 .withBasicAuth("Peppa_Pig", "Peppa_pwd")
                 .exchange("/recipes/1002", HttpMethod.PUT, new HttpEntity<>(newRecipe), String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void shouldReturnLabelsOfARecipe() {
+        compareLabelsWithResponse("/recipes/999", getSavedLabels());
+    }
+
+    @Test
+    void shouldNotReturnLabelsOfARecipeOwnedByAnotherUser() {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("Mummy_Pig", "Mummy_pwd")
+                .getForEntity("/recipes/999/labels", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
@@ -284,6 +352,62 @@ class RecipesApplicationTests {
 
         boolean isSweet = documentContext.read("$.isSweet");
         assertThat(isSweet).isEqualTo(recipe.isSweet());
+
+        Number category_id = documentContext.read("$.category.id");
+        if (recipe.getCategory().getId() != null)
+            assertThat(category_id).isEqualTo(recipe.getCategory().getId());
+        else
+            assertThat(category_id).isNotNull();
+
+        String category_name = documentContext.read("$.category.name");
+        assertThat(category_name).isEqualTo(recipe.getCategory().getName());
+    }
+
+    private void compareLabelsWithResponse(String recipeLocation, Set<Label> labels) {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("Peppa_Pig", "Peppa_pwd")
+                .getForEntity(recipeLocation + "/labels", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        JSONArray ids = documentContext.read("$.*.id");
+        assertThat(ids).contains(labels.stream().map(Label::getId).filter(Objects::nonNull).toArray());
+        assertThat(ids).doesNotContainNull();
+
+        JSONArray names = documentContext.read("$.*.name");
+        assertThat(names).containsExactlyInAnyOrder(labels.stream().map(Label::getName).toArray());
+    }
+
+    private Recipe getSavedRecipe() {
+        Recipe expected = new Recipe();
+        expected.setId(999L);
+        expected.setTitle("Makownik");
+        expected.setUrl("https://ilovebake.pl/przepis/makowiec-na-kruchym-spodzie");
+        expected.setSweet(true);
+
+        Category category = new Category();
+        category.setId(11);
+        category.setName("Ciasta");
+        expected.setCategory(category);
+
+        expected.setLabels(getSavedLabels());
+        return expected;
+    }
+
+    private Set<Label> getSavedLabels() {
+        Label label1 = new Label();
+        label1.setId(11);
+        label1.setName("Mak");
+
+        Label label2 = new Label();
+        label2.setId(12);
+        label2.setName("Drożdże");
+
+        Label label3 = new Label();
+        label3.setId(13);
+        label3.setName("Świąteczne wypieki");
+
+        return Set.of(label1, label2, label3);
     }
 
 }

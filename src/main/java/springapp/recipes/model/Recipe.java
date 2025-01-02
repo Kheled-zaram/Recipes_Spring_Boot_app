@@ -1,4 +1,4 @@
-package springapp.recipes;
+package springapp.recipes.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -7,6 +7,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 
 import java.util.Date;
 import java.sql.Types;
+import java.util.Set;
 
 @Entity
 @Table(name = "recipes")
@@ -31,21 +32,27 @@ public class Recipe {
     @Column(nullable = false)
     private String owner;
 
-    @Column(name = "last_update", nullable = true)
+    @Column(name = "last_update")
     @Temporal(TemporalType.DATE)
     private Date lastUpdate = new Date();
 
-//    @ManyToOne
-//    @JoinColumn(name = "owner_id")
-//    private User owner;
-//
-//    public User getOwner() {
-//        return owner;
-//    }
-//
-//    public void setOwner(User owner) {
-//        this.owner = owner;
-//    }
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name="recipe_labels",
+            joinColumns={@JoinColumn(name="recipe_id")},
+            inverseJoinColumns={@JoinColumn(name="label_id")})
+    private Set<Label> labels;
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -102,5 +109,13 @@ public class Recipe {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public Set<Label> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(Set<Label> labels) {
+        this.labels = labels;
     }
 }
